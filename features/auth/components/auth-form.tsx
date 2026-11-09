@@ -1,5 +1,8 @@
 "use client";
 
+import { apiUrl } from "@/features/shared/api-url";
+
+
 import { useId, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -94,7 +97,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       )}
       <fieldset className={styles.fieldset} disabled={isLoading}>
       <button className={styles.googleButton} type="button" disabled={isLoading}
-        onClick={() => window.location.assign(new URL("/api/auth/google", process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000").href)}>
+        onClick={() => window.location.assign(apiUrl("/api/auth/google"))}>
         <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
           <path fill="#4285F4" d="M43.61 24.46c0-1.36-.12-2.67-.35-3.92H24v7.42h11c-.47 2.4-1.83 4.43-3.86 5.79v4.81h6.25c3.65-3.36 6.22-8.31 6.22-14.1Z" />
           <path fill="#34A853" d="M24 44c5.4 0 9.93-1.79 13.24-4.84l-6.25-4.81c-1.79 1.2-4.08 1.91-6.99 1.91-5.21 0-9.62-3.52-11.2-8.25H6.35v4.97C9.64 39.52 16.3 44 24 44Z" />

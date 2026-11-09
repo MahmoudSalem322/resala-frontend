@@ -1,3 +1,4 @@
+import { apiUrl } from "@/features/shared/api-url";
 import type { LoginPayload, LoginResult, RegisterPayload } from "../types";
 import { rateLimitMessage } from "@/features/shared/rate-limit";
 import { apiFetch, publishSession, runSessionChange } from "@/features/shared/session-client";
@@ -10,7 +11,7 @@ function isObject(value: unknown): value is Record<string, unknown> {
 async function postAuth(path: "register" | "login", payload: RegisterPayload | LoginPayload) {
   let response: Response;
   try {
-    response = await fetch(`http://localhost:3000/api/auth/${path}`, {
+    response = await fetch(apiUrl(`/api/auth/${path}`), {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -53,7 +54,7 @@ export async function loginUser(payload: LoginPayload): Promise<LoginResult> {
 }
 
 export async function getCurrentUser(signal: AbortSignal): Promise<LoginResult | null> {
-  const response = await apiFetch("http://localhost:3000/api/auth/me", {
+  const response = await apiFetch(apiUrl("/api/auth/me"), {
     credentials: "include", cache: "no-store", signal,
   });
   if (response.status === 401) return null;
@@ -66,7 +67,7 @@ export async function getCurrentUser(signal: AbortSignal): Promise<LoginResult |
 
 export async function logoutUser(): Promise<void> {
   return runSessionChange(async () => {
-    const response = await fetch("http://localhost:3000/api/auth/logout", { method: "POST", credentials: "include" });
+    const response = await fetch(apiUrl("/api/auth/logout"), { method: "POST", credentials: "include" });
     if (!response.ok) throw new Error("تعذّر تسجيل الخروج. حاول مرة ثانية.");
     publishSession(null);
   });

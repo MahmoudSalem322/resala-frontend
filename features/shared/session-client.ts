@@ -1,3 +1,4 @@
+import { apiUrl } from "@/features/shared/api-url";
 import type { LoginResult } from "@/features/auth/types";
 import { parseSession } from "@/features/auth/services/session-data";
 import { rateLimitMessage } from "./rate-limit";
@@ -42,13 +43,13 @@ export function refreshSession(): Promise<LoginResult | null> {
   refreshPromise = withSessionLock(async () => {
     if (version !== epoch) return null;
     // Another tab may have refreshed while this tab was waiting for the lock.
-    let response = await fetch("http://localhost:3000/api/auth/me", { credentials: "include", cache: "no-store" });
+    let response = await fetch(apiUrl("/api/auth/me"), { credentials: "include", cache: "no-store" });
     if (response.status === 401) {
-      response = await fetch("http://localhost:3000/api/auth/refresh", { method: "POST", credentials: "include", cache: "no-store" });
+      response = await fetch(apiUrl("/api/auth/refresh"), { method: "POST", credentials: "include", cache: "no-store" });
       if (response.status === 409) {
         // Fallback for simultaneous tabs on browsers without the Web Locks API.
         await new Promise((resolve) => window.setTimeout(resolve, 150));
-        response = await fetch("http://localhost:3000/api/auth/me", { credentials: "include", cache: "no-store" });
+        response = await fetch(apiUrl("/api/auth/me"), { credentials: "include", cache: "no-store" });
         if (response.status === 401) throw new Error("جاري تجديد الجلسة. حاول مرة ثانية.");
       }
     }

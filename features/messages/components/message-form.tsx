@@ -1,5 +1,8 @@
 "use client";
 
+import { apiUrl } from "@/features/shared/api-url";
+
+
 import { useState, type FormEvent } from "react";
 import MessageFeedback from "./message-feedback";
 import Link from "next/link";
@@ -29,7 +32,7 @@ export default function MessageForm() {
     setFeedback(null);
 
     try {
-      const response = await apiFetch("http://localhost:3000/api/messages", {
+      const response = await apiFetch(apiUrl("/api/messages"), {
         method: "POST",
         credentials: "include",
         headers: {
